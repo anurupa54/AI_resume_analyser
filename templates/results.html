@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analysis</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Smart Resume Analyzer
+        </div>
+
+        <div class="nav-text">
+            Analysis Results
+        </div>
+
+    </nav>
+
+
+    <div class="results-container">
+
+        <h1>Resume Analysis</h1>
+
+        <p class="result-subtitle">
+            Analysis for <strong>{{ filename }}</strong>
+        </p>
+
+        <p class="target-role">
+            Target Role:
+            <strong>{{ role }}</strong>
+        </p>
+
+
+        <!-- Scores -->
+<!-- Overall Score -->
+
+<div class="overall-score-card">
+
+    <h2>Overall Resume Score</h2>
+
+    <div class="overall-score">
+        {{ overall_score }}/100
+    </div>
+
+    <p>
+    Based on resume completeness, skill match, and ATS compatibility for
+    <strong>{{ role }}</strong>.
+    </p>
+
+</div>
+        <div class="score-grid">
+
+            <div class="score-card">
+
+                <h2>Resume Completeness</h2>
+
+                <div class="score">
+                    {{ score }}/100
+                </div>
+
+                <p>
+                    Based on important resume sections.
+                </p>
+
+            </div>
+
+
+            <div class="score-card">
+
+                <h2>Skill Match</h2>
+
+                <div class="score">
+                    {{ skill_score }}%
+                </div>
+
+                <p>
+                    Match with {{ role }} skills.
+                </p>
+
+            </div>
+
+        </div>
+<!-- ATS Keyword Analysis -->
+        <div class="ats-card">
+
+            <h2>ATS Keyword Analysis</h2>
+
+            <div class="ats-score">
+                {{ ats_score }}%
+            </div>
+
+            <p>Keyword Match</p>
+
+            <h3>Matched Keywords</h3>
+
+            <div class="skills-container">
+                {% for keyword in matched_keywords %}
+                    <span class="skill matched">{{ keyword }}</span>
+                {% endfor %}
+            </div>
+
+            <h3>Missing Keywords</h3>
+
+            <div class="skills-container">
+                {% for keyword in missing_keywords %}
+                    <span class="skill missing">{{ keyword }}</span>
+                {% endfor %}
+            </div>
+
+        </div>
+
+        <!-- Skills -->
+
+        <div class="skills-card">
+
+            <h2>Skills Analysis</h2>
+                        <p>
+                Your resume matches
+                <strong>{{ matched_skills|length }}</strong>
+                out of
+                <strong>{{ (matched_skills|length) + (missing_skills|length) }}</strong>
+                recommended skills for the
+                <strong>{{ role }}</strong> role.
+            </p>
+
+            <p>
+                Skill Match Score:
+                <strong>{{ skill_score }}%</strong>
+            </p>
+
+
+            <h3>Matched Skills</h3>
+
+            <div class="skill-list">
+
+                {% if matched_skills %}
+
+                    {% for skill in matched_skills %}
+
+                        <span class="skill matched">
+                            ✓ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>No matching skills found.</p>
+
+                {% endif %}
+
+            </div>
+
+
+            <h3>Missing Skills</h3>
+
+            <div class="skill-list">
+
+                {% if missing_skills %}
+
+                    {% for skill in missing_skills %}
+
+                        <span class="skill missing">
+                            ✗ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>No major missing skills detected.</p>
+
+                {% endif %}
+
+            </div>
+
+        </div> 
+
+
+
+        <!-- Resume Sections -->
+
+        <div class="section-card">
+
+            <h2>Resume Sections</h2>
+
+
+            {% for section, present in sections.items() %}
+
+                <div class="section-row">
+
+                    <span>
+                        {{ section }}
+                    </span>
+
+
+                    {% if present %}
+
+                        <span class="status present">
+                            ✓ Present
+                        </span>
+
+                    {% else %}
+
+                        <span class="status missing">
+                            ✗ Missing
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+<!-- Recommendations -->
+
+<div class="recommendations-card">
+
+    <h2>Smart Recommendations</h2>
+
+    <ul>
+        {% for recommendation in recommendations %}
+            <li>{{ recommendation }}</li>
+        {% endfor %}
+    </ul>
+
+</div> 
+<div class="report-download">
+    <a href="{{ url_for('download_report', filename=report_filename) }}">
+        Download Analysis Report
+    </a>
+</div>
+
+<div class="back-button">
+    <a href="/">
+        ← Analyze Another Resume
+    </a>
+</div>
+
+
+</body>
+
+</html>

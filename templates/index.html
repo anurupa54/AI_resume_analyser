@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Resume Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Smart Resume Analyzer
+        </div>
+
+        <div class="nav-text">
+            AI-Powered Resume Analysis
+        </div>
+
+    </nav>
+
+
+    <!-- Hero Section -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Smart Resume Analyzer
+            </h1>
+
+            <p>
+                Analyze your resume, identify skill gaps,
+                and get personalized feedback for your target role.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Upload Section -->
+
+    <div class="upload-container">
+
+        <div class="upload-card">
+
+            <h2>
+                Analyze Your Resume
+            </h2>
+
+            <p class="subtitle">
+                Upload your resume to get started
+            </p>
+
+
+            <form action="/analyze"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+
+                <!-- Resume Upload -->
+
+                <div class="form-group">
+
+                    <label>
+                        Upload Resume
+                    </label>
+
+                    <div class="file-box">
+
+                        <input
+                            type="file"
+                            name="resume"
+                            accept=".pdf,.docx"
+                            required>
+
+                        <p>
+                            PDF or DOCX files only
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Job Role -->
+
+                <div class="form-group">
+
+                    <label for="role">
+                        Target Job Role
+                    </label>
+
+                    <select
+                        id="role"
+                        name="role"
+                        required>
+
+                        <option value="Data Analyst">
+                            Data Analyst
+                        </option>
+
+                        <option value="Web Developer">
+                            Web Developer
+                        </option>
+
+                        <option value="AI Engineer">
+                            AI Engineer
+                        </option>
+
+                        <option value="Cloud Engineer">
+                            Cloud Engineer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="analyze-btn">
+
+                    Analyze Resume
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Features -->
+
+    <section class="features">
+
+        <div class="feature">
+
+            <h3>Resume Score</h3>
+
+            <p>
+                Evaluate your resume structure and completeness.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>ATS Analysis</h3>
+
+            <p>
+                Check your resume against role-specific keywords.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>Smart Feedback</h3>
+
+            <p>
+                Get suggestions to improve your resume.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <p>
+            Smart Resume Analyzer | AI Capstone Project
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>
