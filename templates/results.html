@@ -10,13 +10,14 @@
 
     <title>Resume Analysis</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+ <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
 
 </head>
 
 
 <body>
+
+    <!-- Navigation -->
 
     <nav class="navbar">
 
@@ -33,7 +34,9 @@
 
     <div class="results-container">
 
-        <h1>Resume Analysis</h1>
+        <h1>
+            Resume Analysis
+        </h1>
 
         <p class="result-subtitle">
             Analysis for <strong>{{ filename }}</strong>
@@ -45,28 +48,42 @@
         </p>
 
 
-        <!-- Scores -->
-<!-- Overall Score -->
+        <!-- Overall Score -->
 
-<div class="overall-score-card">
+        <div class="overall-score-card">
 
-    <h2>Overall Resume Score</h2>
+            <h2>
+                Overall Resume Score
+            </h2>
 
-    <div class="overall-score">
-        {{ overall_score }}/100
-    </div>
+            <div class="overall-score"
+                 style="font-size: 64px !important;
+                        font-weight: 900 !important;
+                        line-height: 1 !important;
+                        margin: 15px 0 !important;">
 
-    <p>
-    Based on resume completeness, skill match, and ATS compatibility for
-    <strong>{{ role }}</strong>.
-    </p>
+                {{ overall_score }}/100
 
-</div>
+            </div>
+
+            <p>
+                Based on resume completeness, skill match,
+                and ATS compatibility for
+                <strong>{{ role }}</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- Other Scores -->
+
         <div class="score-grid">
 
             <div class="score-card">
 
-                <h2>Resume Completeness</h2>
+                <h2>
+                    Resume Completeness
+                </h2>
 
                 <div class="score">
                     {{ score }}/100
@@ -81,7 +98,9 @@
 
             <div class="score-card">
 
-                <h2>Skill Match</h2>
+                <h2>
+                    Skill Match
+                </h2>
 
                 <div class="score">
                     {{ skill_score }}%
@@ -94,45 +113,76 @@
             </div>
 
         </div>
-<!-- ATS Keyword Analysis -->
+
+
+        <!-- ATS Keyword Analysis -->
+
         <div class="ats-card">
 
-            <h2>ATS Keyword Analysis</h2>
+            <h2>
+                ATS Keyword Analysis
+            </h2>
 
             <div class="ats-score">
                 {{ ats_score }}%
             </div>
 
-            <p>Keyword Match</p>
+            <p>
+                Keyword Match
+            </p>
 
-            <h3>Matched Keywords</h3>
+
+            <h3>
+                Matched Keywords
+            </h3>
 
             <div class="skills-container">
+
                 {% for keyword in matched_keywords %}
-                    <span class="skill matched">{{ keyword }}</span>
+
+                    <span class="skill matched">
+                        {{ keyword }}
+                    </span>
+
                 {% endfor %}
+
             </div>
 
-            <h3>Missing Keywords</h3>
+
+            <h3>
+                Missing Keywords
+            </h3>
 
             <div class="skills-container">
+
                 {% for keyword in missing_keywords %}
-                    <span class="skill missing">{{ keyword }}</span>
+
+                    <span class="skill missing">
+                        {{ keyword }}
+                    </span>
+
                 {% endfor %}
+
             </div>
 
         </div>
 
-        <!-- Skills -->
+
+        <!-- Skills Analysis -->
 
         <div class="skills-card">
 
-            <h2>Skills Analysis</h2>
-                        <p>
+            <h2>
+                Skills Analysis
+            </h2>
+
+            <p>
                 Your resume matches
                 <strong>{{ matched_skills|length }}</strong>
                 out of
-                <strong>{{ (matched_skills|length) + (missing_skills|length) }}</strong>
+                <strong>
+                    {{ (matched_skills|length) + (missing_skills|length) }}
+                </strong>
                 recommended skills for the
                 <strong>{{ role }}</strong> role.
             </p>
@@ -143,7 +193,9 @@
             </p>
 
 
-            <h3>Matched Skills</h3>
+            <h3>
+                Matched Skills
+            </h3>
 
             <div class="skill-list">
 
@@ -159,14 +211,18 @@
 
                 {% else %}
 
-                    <p>No matching skills found.</p>
+                    <p>
+                        No matching skills found.
+                    </p>
 
                 {% endif %}
 
             </div>
 
 
-            <h3>Missing Skills</h3>
+            <h3>
+                Missing Skills
+            </h3>
 
             <div class="skill-list">
 
@@ -182,77 +238,103 @@
 
                 {% else %}
 
-                    <p>No major missing skills detected.</p>
+                    <p>
+                        No major missing skills detected.
+                    </p>
 
                 {% endif %}
 
             </div>
 
-        </div> 
-
+        </div>
 
 
         <!-- Resume Sections -->
 
         <div class="section-card">
 
-            <h2>Resume Sections</h2>
+            <h2>
+                Resume Sections
+            </h2>
 
+            <div class="resume-section-grid">
 
-            {% for section, present in sections.items() %}
+                {% for section, present in sections.items() %}
 
-                <div class="section-row">
+                    <div class="resume-section-item">
 
-                    <span>
-                        {{ section }}
-                    </span>
-
-
-                    {% if present %}
-
-                        <span class="status present">
-                            ✓ Present
+                        <span class="resume-section-name">
+                            {{ section }}
                         </span>
 
-                    {% else %}
+                        {% if present %}
 
-                        <span class="status missing">
-                            ✗ Missing
-                        </span>
+                            <span class="status present">
+                                ✓ Present
+                            </span>
 
-                    {% endif %}
+                        {% else %}
 
-                </div>
+                            <span class="status missing">
+                                ✗ Missing
+                            </span>
 
-            {% endfor %}
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
 
         </div>
 
 
-<!-- Recommendations -->
+        <!-- Smart Recommendations -->
 
-<div class="recommendations-card">
+        <div class="recommendations-card">
 
-    <h2>Smart Recommendations</h2>
+            <h2>
+                Smart Recommendations
+            </h2>
 
-    <ul>
-        {% for recommendation in recommendations %}
-            <li>{{ recommendation }}</li>
-        {% endfor %}
-    </ul>
+            <ul>
 
-</div> 
-<div class="report-download">
-    <a href="{{ url_for('download_report', filename=report_filename) }}">
-        Download Analysis Report
-    </a>
-</div>
+                {% for recommendation in recommendations %}
 
-<div class="back-button">
-    <a href="/">
-        ← Analyze Another Resume
-    </a>
-</div>
+                    <li>
+                        {{ recommendation }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+
+        <!-- Download Report -->
+
+        <div class="report-download">
+
+            <a href="{{ url_for('download_report', filename=report_filename) }}">
+                Download Analysis Report
+            </a>
+
+        </div>
+
+
+        <!-- Analyze Another Resume -->
+
+        <div class="back-button">
+
+            <a href="/">
+                ← Analyze Another Resume
+            </a>
+
+        </div>
+
+    </div>
 
 
 </body>

@@ -16,7 +16,14 @@
 </head>
 
 
-<body>
+<body class="home-page">
+
+    <!-- Decorative Background Shapes -->
+
+    <div class="shape shape-yellow"></div>
+    <div class="shape shape-pink"></div>
+    <div class="shape shape-purple"></div>
+
 
     <!-- Navigation -->
 
@@ -26,8 +33,8 @@
             Smart Resume Analyzer
         </div>
 
-        <div class="nav-text">
-            AI-Powered Resume Analysis
+        <div class="nav-badge">
+            AI POWERED
         </div>
 
     </nav>
@@ -39,13 +46,19 @@
 
         <div class="hero-content">
 
+            <div class="hero-label">
+                ✦ RESUME ANALYSIS TOOL
+            </div>
+
             <h1>
-                Smart Resume Analyzer
+                Make Your Resume
+                <span>Stand Out.</span>
             </h1>
 
             <p>
-                Analyze your resume, identify skill gaps,
-                and get personalized feedback for your target role.
+                Analyze your resume, discover skill gaps,
+                check ATS keywords, and get smart feedback
+                for your target job role.
             </p>
 
         </div>
@@ -55,16 +68,30 @@
 
     <!-- Upload Section -->
 
-    <div class="upload-container">
+    <main class="upload-container">
 
         <div class="upload-card">
 
-            <h2>
-                Analyze Your Resume
-            </h2>
+            <div class="card-top">
+
+                <div>
+                    <span class="step-number">01</span>
+
+                    <h2>
+                        Analyze Your Resume
+                    </h2>
+                </div>
+
+                <div class="card-star">
+                    ★
+                </div>
+
+            </div>
+
 
             <p class="subtitle">
-                Upload your resume to get started
+                Upload your resume and choose the role
+                you're applying for.
             </p>
 
 
@@ -78,20 +105,32 @@
                 <div class="form-group">
 
                     <label>
-                        Upload Resume
+                        YOUR RESUME
                     </label>
 
                     <div class="file-box">
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <div class="upload-text">
+
+                            <strong>
+                                Choose your resume
+                            </strong>
+
+                            <p>
+                                PDF or DOCX files only
+                            </p>
+
+                        </div>
 
                         <input
                             type="file"
                             name="resume"
                             accept=".pdf,.docx"
                             required>
-
-                        <p>
-                            PDF or DOCX files only
-                        </p>
 
                     </div>
 
@@ -103,7 +142,7 @@
                 <div class="form-group">
 
                     <label for="role">
-                        Target Job Role
+                        TARGET JOB ROLE
                     </label>
 
                     <select
@@ -138,7 +177,13 @@
                     type="submit"
                     class="analyze-btn">
 
-                    Analyze Resume
+                    <span>
+                        Analyze My Resume
+                    </span>
+
+                    <span class="arrow">
+                        →
+                    </span>
 
                 </button>
 
@@ -147,52 +192,142 @@
 
         </div>
 
-    </div>
+    </main>
 
 
     <!-- Features -->
 
-    <section class="features">
+    <section class="features-section">
 
-        <div class="feature">
+        <div class="features-heading">
 
-            <h3>Resume Score</h3>
+            <span>
+                WHAT YOU GET
+            </span>
 
-            <p>
-                Evaluate your resume structure and completeness.
-            </p>
-
-        </div>
-
-
-        <div class="feature">
-
-            <h3>ATS Analysis</h3>
-
-            <p>
-                Check your resume against role-specific keywords.
-            </p>
+            <h2>
+                Everything you need
+                <br>
+                to improve your resume.
+            </h2>
 
         </div>
 
 
-        <div class="feature">
+        <div class="features">
 
-            <h3>Smart Feedback</h3>
 
-            <p>
-                Get suggestions to improve your resume.
-            </p>
+            <!-- Feature 1 -->
+
+            <div class="feature feature-yellow">
+
+                <div class="feature-number">
+                    01
+                </div>
+
+                <div class="feature-icon">
+                    %
+                </div>
+
+                <h3>
+                    Resume Score
+                </h3>
+
+                <p>
+                    Evaluate your resume structure,
+                    completeness, and overall quality.
+                </p>
+
+            </div>
+
+
+            <!-- Feature 2 -->
+
+            <div class="feature feature-pink">
+
+                <div class="feature-number">
+                    02
+                </div>
+
+                <div class="feature-icon">
+                    #
+                </div>
+
+                <h3>
+                    ATS Analysis
+                </h3>
+
+                <p>
+                    Check your resume against
+                    role-specific keywords.
+                </p>
+
+            </div>
+
+
+            <!-- Feature 3 -->
+
+            <div class="feature feature-purple">
+
+                <div class="feature-number">
+                    03
+                </div>
+
+                <div class="feature-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Smart Feedback
+                </h3>
+
+                <p>
+                    Get personalized suggestions
+                    to improve your resume.
+                </p>
+
+            </div>
+
 
         </div>
 
     </section>
 
 
+    <!-- Bottom Banner -->
+
+    <section class="bottom-banner">
+
+        <div>
+
+            <span>
+                READY TO IMPROVE?
+            </span>
+
+            <h2>
+                Your next opportunity
+                starts with a better resume.
+            </h2>
+
+        </div>
+
+        <div class="banner-arrow">
+            ↑
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+
     <footer>
 
         <p>
-            Smart Resume Analyzer | AI Capstone Project
+            Smart Resume Analyzer
+        </p>
+
+        <p>
+            AI Capstone Project
         </p>
 
     </footer>
