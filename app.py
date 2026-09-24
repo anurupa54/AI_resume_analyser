@@ -6,6 +6,19 @@ import re
 import sqlite3
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
+    PageBreak
+)
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.units import inch
 app = Flask(__name__)
 DATABASE = "resume_analyzer.db"
 
@@ -324,7 +337,8 @@ def generate_pdf_report(
     missing_skills,
     matched_keywords,
     missing_keywords,
-    recommendations
+    recommendations,
+    sections=None
 ):
     report_folder = "reports"
 
@@ -340,119 +354,492 @@ def generate_pdf_report(
         filename
     )
 
-    pdf = canvas.Canvas(report_path, pagesize=letter)
-
-    width, height = letter
-    y = height - 50
-
-    pdf.setFont("Helvetica-Bold", 18)
-    pdf.drawString(50, y, "Smart Resume Analyzer")
-
-    y -= 30
-
-    pdf.setFont("Helvetica-Bold", 14)
-    pdf.drawString(50, y, "Resume Analysis Report")
-
-    y -= 35
-
-    pdf.setFont("Helvetica", 11)
-
-    pdf.drawString(50, y, f"Target Role: {role}")
-    y -= 20
-
-    pdf.drawString(
-        50,
-        y,
-        f"Overall Resume Score: {overall_score}/100"
-    )
-    y -= 20
-
-    pdf.drawString(
-        50,
-        y,
-        f"Resume Completeness: {score}/100"
-    )
-    y -= 20
-
-    pdf.drawString(
-        50,
-        y,
-        f"Skill Match: {skill_score}%"
-    )
-    y -= 20
-
-    pdf.drawString(
-        50,
-        y,
-        f"ATS Compatibility: {ats_score}%"
+    # --------------------------------
+    # PDF document setup
+    # --------------------------------
+    doc = SimpleDocTemplate(
+        report_path,
+        pagesize=letter,
+        rightMargin=45,
+        leftMargin=45,
+        topMargin=50,
+        bottomMargin=45
     )
 
-    y -= 35
+    styles = getSampleStyleSheet()
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Matched Skills")
+    title_style = ParagraphStyle(
+        "ReportTitle",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=22,
+        leading=26,
+        alignment=TA_CENTER,
+        spaceAfter=8
+    )
 
-    y -= 20
-    pdf.setFont("Helvetica", 10)
+    subtitle_style = ParagraphStyle(
+        "ReportSubtitle",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=11,
+        leading=15,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor("#555555"),
+        spaceAfter=20
+    )
 
-    for skill in matched_skills:
-        pdf.drawString(60, y, f"- {skill}")
-        y -= 15
+  
+    section_style = ParagraphStyle(
+        "SectionHeading",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=15,
+        leading=17,
+        textColor=colors.HexColor("#111111"),
+        spaceBefore=3,
+        spaceAfter=4
+    )
 
-    y -= 10
+    normal_style = ParagraphStyle(
+        "NormalText",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=10,
+        leading=11,
+        textColor=colors.HexColor("#222222"),
+        spaceBefore=0,
+        spaceAfter=0
+    )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Missing Skills")
+    small_style = ParagraphStyle(
+        "SmallText",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=9,
+        leading=10,
+        textColor=colors.HexColor("#444444"),
+        spaceBefore=0,
+        spaceAfter=0
+    )
 
-    y -= 20
-    pdf.setFont("Helvetica", 10)
+    score_style = ParagraphStyle(
+        "Score",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=22,
+        leading=24,
+        alignment=TA_CENTER,
+        textColor=colors.HexColor("#111111"),
+        spaceBefore=0,
+        spaceAfter=0
+    )
 
-    for skill in missing_skills:
-        pdf.drawString(60, y, f"- {skill}")
-        y -= 15
+    badge_style = ParagraphStyle(
+        "Badge",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=9,
+        leading=10,
+        alignment=TA_CENTER,
+        spaceBefore=0,
+        spaceAfter=0
+    )
+    story = []
 
-    y -= 10
+    # --------------------------------
+    # Header
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "Smart Resume Analyzer",
+            title_style
+        )
+    )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Matched ATS Keywords")
+    story.append(
+        Paragraph(
+            "Resume Analysis Report",
+            subtitle_style
+        )
+    )
 
-    y -= 20
-    pdf.setFont("Helvetica", 10)
+    # --------------------------------
+    # Resume information
+    # --------------------------------
+    resume_name = os.path.basename(filepath)
 
-    for keyword in matched_keywords:
-        pdf.drawString(60, y, f"- {keyword}")
-        y -= 15
+    info_data = [
+        [
+            Paragraph("<b>Resume File</b>", normal_style),
+            Paragraph(resume_name, normal_style)
+        ],
+        [
+            Paragraph("<b>Target Role</b>", normal_style),
+            Paragraph(role, normal_style)
+        ]
+    ]
 
-    y -= 10
+    info_table = Table(
+        info_data,
+        colWidths=[1.5 * inch, 5.4 * inch]
+    )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Missing ATS Keywords")
+    info_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (0, -1), colors.HexColor("#f3f3f3")),
+            ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#222222")),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#cccccc")),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 10),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+            ("TOPPADDING", (0, 0), (-1, -1), 8),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 8)
+        ])
+    )
 
-    y -= 20
-    pdf.setFont("Helvetica", 10)
+    story.append(info_table)
+    story.append(Spacer(1, 7))
 
-    for keyword in missing_keywords:
-        pdf.drawString(60, y, f"- {keyword}")
-        y -= 15
+    # --------------------------------
+    # Overall score
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "Overall Resume Score",
+            section_style
+        )
+    )
 
-    y -= 10
+    overall_table = Table(
+        [
+            [
+                Paragraph(
+                    f"{overall_score}/100",
+                    score_style
+                )
+            ]
+        ],
+        colWidths=[6.9 * inch],
+        rowHeights=[0.75 * inch]
+    )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Smart Recommendations")
+    overall_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fff3b0")),
+            ("BOX", (0, 0), (-1, -1), 2, colors.HexColor("#111111")),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER")
+        ])
+    )
 
-    y -= 20
-    pdf.setFont("Helvetica", 10)
+    story.append(overall_table)
+    story.append(Spacer(1, 15))
 
-    for recommendation in recommendations:
-        pdf.drawString(60, y, f"- {recommendation}")
-        y -= 15
+    # --------------------------------
+    # Score breakdown
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "Score Breakdown",
+            section_style
+        )
+    )
 
-        if y < 50:
-            pdf.showPage()
-            y = height - 50
-            pdf.setFont("Helvetica", 10)
+    score_data = [
+        [
+            Paragraph("<b>Resume Completeness</b>", small_style),
+            Paragraph("<b>Skill Match</b>", small_style),
+            Paragraph("<b>ATS Compatibility</b>", small_style)
+        ],
+        [
+            Paragraph(f"{score}/100", score_style),
+            Paragraph(f"{skill_score}%", score_style),
+            Paragraph(f"{ats_score}%", score_style)
+        ]
+    ]
 
-    pdf.save()
+    score_table = Table(
+        score_data,
+        colWidths=[
+            2.3 * inch,
+            2.3 * inch,
+            2.3 * inch
+        ],
+        rowHeights=[0.35 * inch, 0.6 * inch]
+    )
+
+    score_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f3f3f3")),
+            ("BOX", (0, 0), (-1, -1), 1.5, colors.HexColor("#222222")),
+            ("INNERGRID", (0, 0), (-1, -1), 1, colors.HexColor("#cccccc")),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("TOPPADDING", (0, 0), (-1, -1), 7),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 7)
+        ])
+    )
+
+    story.append(score_table)
+
+    # --------------------------------
+    # Page 2 - Skills and ATS
+    # --------------------------------
+    story.append(PageBreak())
+
+    story.append(
+        Paragraph(
+            "Skills Analysis",
+            section_style
+        )
+    )
+
+    story.append(
+        Paragraph(
+            "<b>Matched Skills</b>",
+            normal_style
+        )
+    )
+
+    if matched_skills:
+        matched_text = " • ".join(matched_skills)
+    else:
+        matched_text = "No matching skills found."
+
+    story.append(
+        Paragraph(
+            matched_text,
+            small_style
+        )
+    )
+
+    story.append(Spacer(1, 6))
+
+    story.append(
+        Paragraph(
+            "<b>Missing Skills</b>",
+            normal_style
+        )
+    )
+
+    if missing_skills:
+        missing_text = " • ".join(missing_skills)
+    else:
+        missing_text = "No major missing skills detected."
+
+    story.append(
+        Paragraph(
+            missing_text,
+            small_style
+        )
+    )
+
+    story.append(Spacer(1, 10))
+
+    # --------------------------------
+    # ATS Analysis
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "ATS Keyword Analysis",
+            section_style
+        )
+    )
+
+    story.append(
+        Paragraph(
+            "<b>Matched ATS Keywords</b>",
+            normal_style
+        )
+    )
+
+    if matched_keywords:
+        matched_keyword_text = " • ".join(matched_keywords)
+    else:
+        matched_keyword_text = "No matching keywords found."
+
+    story.append(
+        Paragraph(
+            matched_keyword_text,
+            small_style
+        )
+    )
+
+    story.append(Spacer(1, 6))
+
+    story.append(
+        Paragraph(
+            "<b>Missing ATS Keywords</b>",
+            normal_style
+        )
+    )
+
+    if missing_keywords:
+        missing_keyword_text = " • ".join(missing_keywords)
+    else:
+        missing_keyword_text = "No major missing keywords detected."
+
+    story.append(
+        Paragraph(
+            missing_keyword_text,
+            small_style
+        )
+    )
+
+    # --------------------------------
+    # Page 3 - Resume Sections
+    # --------------------------------
+    story.append(PageBreak())
+
+    story.append(
+        Paragraph(
+            "Resume Sections",
+            section_style
+        )
+    )
+
+    section_data = [
+        [
+            Paragraph("<b>Resume Section</b>", small_style),
+            Paragraph("<b>Status</b>", small_style)
+        ]
+    ]
+
+    if sections:
+        for section_name, present in sections.items():
+
+            status = "Present" if present else "Missing"
+
+            section_data.append(
+                [
+                    Paragraph(section_name, small_style),
+                    Paragraph(status, badge_style)
+                ]
+            )
+    else:
+        section_data.append(
+            [
+                Paragraph(
+                    "Section information unavailable",
+                    small_style
+                ),
+                Paragraph("-", badge_style)
+            ]
+        )
+
+    section_table = Table(
+        section_data,
+        colWidths=[5.2 * inch, 1.7 * inch],
+        repeatRows=1
+    )
+
+    section_table.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f3f3f3")),
+            ("BOX", (0, 0), (-1, -1), 1.5, colors.HexColor("#222222")),
+            ("INNERGRID", (0, 0), (-1, -1), 0.75, colors.HexColor("#cccccc")),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (1, 1), (1, -1), "CENTER"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 10),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+            ("TOPPADDING", (0, 0), (-1, -1), 9),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 9)
+        ])
+    )
+
+    # Add status backgrounds
+    if sections:
+        for row_number, (section_name, present) in enumerate(
+            sections.items(),
+            start=1
+        ):
+            if present:
+                section_table.setStyle(
+                    TableStyle([
+                        (
+                            "BACKGROUND",
+                            (1, row_number),
+                            (1, row_number),
+                            colors.HexColor("#b9f6c5")
+                        )
+                    ])
+                )
+            else:
+                section_table.setStyle(
+                    TableStyle([
+                        (
+                            "BACKGROUND",
+                            (1, row_number),
+                            (1, row_number),
+                            colors.HexColor("#ffb4c9")
+                        )
+                    ])
+                )
+
+    story.append(section_table)
+
+    story.append(Spacer(1, 10))
+
+    # --------------------------------
+    # Smart Recommendations
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "Smart Recommendations",
+            section_style
+        )
+    )
+
+    if recommendations:
+        for number, recommendation in enumerate(
+            recommendations,
+            start=1
+        ):
+            story.append(
+                Paragraph(
+                    f"<b>{number}.</b> {recommendation}",
+                    small_style
+                )
+            )
+            story.append(Spacer(1, 4))
+    else:
+        story.append(
+            Paragraph(
+                "No additional recommendations.",
+                small_style
+            )
+        )
+
+    # --------------------------------
+    # Footer
+    # --------------------------------
+    def add_footer(canvas_obj, document):
+        canvas_obj.saveState()
+
+        canvas_obj.setFont(
+            "Helvetica",
+            8
+        )
+
+        canvas_obj.setFillColor(
+            colors.HexColor("#666666")
+        )
+
+        canvas_obj.drawCentredString(
+            letter[0] / 2,
+            25,
+            f"Smart Resume Analyzer  •  Page {document.page}"
+        )
+
+        canvas_obj.restoreState()
+
+    # Build PDF
+    doc.build(
+        story,
+        onFirstPage=add_footer,
+        onLaterPages=add_footer
+    )
 
     return report_path
 @app.route("/analyze", methods=["POST"])
@@ -534,7 +921,7 @@ def analyze():
         (score * 0.3) +
         (skill_score * 0.4) +
         (ats_score * 0.3)
-)     # Generate PDF report
+)  # Generate PDF report
     report_path = generate_pdf_report(
         filepath,
         role,
@@ -546,7 +933,8 @@ def analyze():
         missing_skills,
         matched_keywords,
         missing_keywords,
-        recommendations
+        recommendations,
+        sections
     )
 
     return render_template(
@@ -565,8 +953,9 @@ def analyze():
         recommendations=recommendations,
         resume_text=resume_text,
         report_path=report_path,
-        report_filename=os.path.basename(report_path),
+        report_filename=os.path.basename(report_path)
     )
+
 
 @app.route("/download-report/<filename>")
 def download_report(filename):
@@ -579,5 +968,7 @@ def download_report(filename):
         report_path,
         as_attachment=True
     )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
