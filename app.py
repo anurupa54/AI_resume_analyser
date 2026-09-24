@@ -97,14 +97,16 @@ def detect_sections(text):
     text_upper = text.upper()
 
     sections = {
-
-        "Profile / Summary": [
-            "PROFILE",
-            "SUMMARY",
-            "PROFESSIONAL SUMMARY",
-            "OBJECTIVE"
-        ],
-
+"Profile / Summary": [
+    "PROFILE",
+    "SUMMARY",
+    "PROFESSIONAL SUMMARY",
+    "PROFESSIONAL PROFILE",
+    "PROFILE SUMMARY",
+    "ABOUT ME",
+    "CAREER OBJECTIVE",
+    "OBJECTIVE"
+],
         "Experience": [
             "PROFESSIONAL EXPERIENCE",
             "WORK EXPERIENCE",
