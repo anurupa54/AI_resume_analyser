@@ -4,6 +4,7 @@ from docx import Document
 import os
 import re
 import sqlite3
+import spacy
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.platypus import (
@@ -21,6 +22,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.units import inch
 app = Flask(__name__)
 DATABASE = "resume_analyzer.db"
+nlp = spacy.blank("en")
 
 
 def get_role_data(role):
@@ -201,6 +203,16 @@ def clean_text(text):
     text = re.sub(r"\n{3,}", "\n\n", text)
 
     return text.strip()
+def preprocess_with_spacy(text):
+    doc = nlp(text)
+
+    tokens = [
+        token.text.lower()
+        for token in doc
+        if not token.is_stop and not token.is_punct and not token.is_space
+    ]
+
+    return tokens   
 
 
 # --------------------------------
@@ -892,6 +904,8 @@ def analyze():
     # Clean text
     resume_text = clean_text(resume_text)
 
+    spacy_tokens = preprocess_with_spacy(resume_text)
+    spacy_token_count = len(spacy_tokens)
 
     # Detect sections
     sections = detect_sections(resume_text)
@@ -953,7 +967,8 @@ def analyze():
         recommendations=recommendations,
         resume_text=resume_text,
         report_path=report_path,
-        report_filename=os.path.basename(report_path)
+        report_filename=os.path.basename(report_path),
+        spacy_token_count=spacy_token_count
     )
 
 
