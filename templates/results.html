@@ -11,6 +11,118 @@
     <title>Resume Analysis</title>
 
  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+ <style>
+/* Resume Sections */
+.resume-section-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    margin-top: 25px !important;
+}
+
+.resume-section-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-height: 55px !important;
+    padding: 8px 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.resume-section-name {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #111111 !important;
+}
+
+.resume-section-item .status {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 105px !important;
+    padding: 8px 14px !important;
+    border: 2px solid #111111 !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+}
+
+.resume-section-item .status.present {
+    background: #b9f6c5 !important;
+    color: #111111 !important;
+}
+
+.resume-section-item .status.missing {
+    background: #ffb4c9 !important;
+    color: #111111 !important;
+}
+</style>
+ <style>
+.resume-section-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    margin-top: 25px !important;
+}
+
+.resume-section-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-height: 55px !important;
+    padding: 8px 0 !important;
+
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.resume-section-name {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #111111 !important;
+}
+
+.resume-section-item .status {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    min-width: 105px !important;
+    padding: 8px 14px !important;
+
+    border: 2px solid #111111 !important;
+    border-radius: 5px !important;
+
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+}
+
+.resume-section-item .status.present {
+    background: #b9f6c5 !important;
+    color: #111111 !important;
+}
+
+.resume-section-item .status.missing {
+    background: #ffb4c9 !important;
+    color: #111111 !important;
+}
+
+.resume-section-item:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+</style>
 
 </head>
 
